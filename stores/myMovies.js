@@ -4,10 +4,10 @@ import { defineStore } from "pinia"
 
 export const useMyMovies = defineStore("myMovies", {
   state: () => ({
-    baseUrl: "http://localhost:3000",
-    scrapUrl: `https://ngefilm21.lat`,
+    all: [],
     movies: [],
-    page: 1,
-    totalPages: null,
+    tv: [],
+    currentPage: 1,
+    totalPage: null,
   }),
 })
