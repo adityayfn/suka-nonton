@@ -15,7 +15,7 @@
             :src="streamingLinkActive"
             frameborder="0"
             allowfullscreen
-            referrerpolicy="same-origin"
+            referrerpolicy="no-referrer"
             class="frame"
             :width="
               $vuetify.display.sm
