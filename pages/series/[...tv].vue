@@ -1,4 +1,8 @@
 <template>
+  <Head>
+    <Title>{{ series.title }}</Title>
+    <Meta name="description" content="Series terbaik" />
+  </Head>
   <v-container>
     <div v-if="loading">
       <Loading />

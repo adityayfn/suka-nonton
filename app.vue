@@ -1,4 +1,9 @@
 <template>
+  <Head>
+    <Title>Suka Nonton : Nonton film tanpa iklan</Title>
+    <Meta name="description" content="nonton film tanpa iklan" />
+  </Head>
+
   <v-layout class="rounded rounded-md">
     <v-app-bar class="" color="">
       <v-card
@@ -74,7 +79,7 @@ const items = ref([
     icon: "mdi-movie",
     route: "/category",
   },
-  
+
   {
     title: "Explore",
     icon: "mdi-magnify",

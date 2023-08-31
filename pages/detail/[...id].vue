@@ -1,4 +1,9 @@
 <template>
+  <Head>
+    <Title>{{ detail.title }}</Title>
+    <Meta name="description" content="nonton film gratis" />
+  </Head>
+
   <v-container class="">
     <div v-if="loading">
       <Loading />
