@@ -1,4 +1,3 @@
-// https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   css: [
     "vuetify/lib/styles/main.sass",
@@ -7,10 +6,14 @@ export default defineNuxtConfig({
   build: {
     transpile: ["vuetify"],
   },
+  nitro: {
+    prerender: {
+      routes: ["/category", "/explore"],
+    },
+  },
   runtimeConfig: {
     public: {
       baseUrl: "http://localhost:3000",
     },
   },
-  modules: ["@pinia/nuxt"],
 })

@@ -16,9 +16,5 @@
     "nuxt": "^3.7.0",
     "sass": "^1.66.0",
     "vuetify": "3.3.13"
-  },
-  "dependencies": {
-    "@pinia/nuxt": "^0.4.11",
-    "pinia": "^2.1.6"
   }
 }

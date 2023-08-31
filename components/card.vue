@@ -2,6 +2,7 @@
   <v-card
     width="150"
     max-width="340"
+    height="450"
     class="mb-5 mx-auto"
     v-for="movie in movies"
   >
