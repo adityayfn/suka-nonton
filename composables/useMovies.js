@@ -18,10 +18,10 @@ export const useMovies = () => {
   const getDetail = async (id) => {
     try {
       loading.value = true
-      const res = await axios.get(
-        `https://asyik-nonton.vercel.app/api/movies/detail/${id}`
-      )
-
+      let url = `https://asyik-nonton.vercel.app/api/movies/detail/${id[0]}`
+      if (id.length > 2)
+        url = `https://asyik-nonton.vercel.app/api/movies/detail/${id[0]}/${id[1]}`
+      const res = await axios.get(url)
       return res.data
     } catch (error) {
       return error
@@ -65,6 +65,20 @@ export const useMovies = () => {
       return error
     }
   }
+  const getSeriesEps = async (eps) => {
+    try {
+      loading.value = true
+      const res = await axios.get(
+        `https://asyik-nonton.vercel.app/api/tv/${eps[0]}/${eps[1]}`
+      )
+
+      return res.data
+    } catch (error) {
+      return error
+    } finally {
+      loading.value = false
+    }
+  }
 
   return {
     getAll,
@@ -73,5 +87,6 @@ export const useMovies = () => {
     getByCategory,
     getBySearch,
     loading,
+    getSeriesEps,
   }
 }

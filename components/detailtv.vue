@@ -1,0 +1,34 @@
+<template>
+  <v-card
+    class="my-5 mx-auto"
+    :width="$vuetify.display.sm ? '700' : $vuetify.display.mdAndUp ? '900' : ''"
+  >
+    <div class="mx-5 my-3">
+      <div class=" ">
+        <h3 class="capitalize my-2">
+          tanggal rilis: <span class="def">{{ props.detail.realease }}</span>
+        </h3>
+        <h3 class="capitalize my-2">
+          jumlah episode:
+          <span class="def">{{ props.detail.number_of_eps }}</span>
+        </h3>
+        <h3 class="capitalize my-2">
+          genre: <span class="def">{{ props.detail.genre }}</span>
+        </h3>
+        <h3 class="capitalize my-2">
+          negara: <span class="def">{{ props.detail.country }}</span>
+        </h3>
+        <h3 class="capitalize my-2">
+          durasi: <span class="def">{{ props.detail.duration }}</span>
+        </h3>
+        <h3 class="capitalize">
+          pemain: <span class="def">{{ props.detail.artist }}</span>
+        </h3>
+      </div>
+    </div>
+  </v-card>
+</template>
+<script setup>
+const props = defineProps(["detail"])
+</script>
+<style></style>

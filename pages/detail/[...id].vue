@@ -34,13 +34,28 @@
           ></iframe>
         </div>
         <div class="d-flex flex-wrap mx-5 my-6">
-          <div v-for="(link, index) in detail.streaming_links">
+          <div
+            v-for="(link, index) in detail.streaming_links"
+            v-if="type === 'movie'"
+          >
             <v-btn
-              @click="changeStremLink(link)"
+              @click="changeStreamLink(link)"
               color="#ff0000"
               class="mr-1 my-1"
               >server{{ index + 1 }}</v-btn
             >
+          </div>
+          <div v-if="type === 'tv'" class="d-flex flex-wrap align-center">
+            <h3 class="mr-3">Pilih Episode</h3>
+
+            <div v-for="(link, index) in detail.eps_links">
+              <v-btn
+                @click="chooseEps(link.tvId)"
+                color="#ff0000"
+                class="mr-1 my-1"
+                >{{ link.title }}</v-btn
+              >
+            </div>
           </div>
         </div>
       </v-card>
@@ -61,48 +76,12 @@
         </div>
       </v-card>
 
-      <v-card
-        class="my-5 mx-auto"
-        :width="
-          $vuetify.display.sm ? '700' : $vuetify.display.mdAndUp ? '900' : ''
-        "
-      >
-        <div class="mx-5 my-3">
-          <div class=" ">
-            <h3 class="capitalize my-2">
-              tanggal rilis: <span class="def">{{ detail.realease }}</span>
-            </h3>
-            <h3 class="capitalize my-2">
-              tagline: <span class="def">{{ detail.tagline }}</span>
-            </h3>
-            <h3 class="capitalize my-2">
-              genre: <span class="def">{{ detail.genre }}</span>
-            </h3>
-            <h3 class="capitalize my-2">
-              durasi: <span class="def">{{ detail.duration }}</span>
-            </h3>
-            <h3 class="capitalize">
-              pemain: <span class="def">{{ detail.artist }}</span>
-            </h3>
-          </div>
-        </div>
-      </v-card>
-
-      <v-card
-        class="my-5 mx-auto"
-        :width="
-          $vuetify.display.sm ? '700' : $vuetify.display.mdAndUp ? '900' : ''
-        "
-      >
-        <h2 class="mx-5 mt-2">Download Link</h2>
-        <div class="d-flex flex-wrap">
-          <div class="mx-5 my-3" v-for="download in downloadLinks">
-            <v-btn :href="download.link" color="#ff0000">{{
-              download.text
-            }}</v-btn>
-          </div>
-        </div>
-      </v-card>
+      <div v-if="type === 'movie'">
+        <Detailmovies :detail="detail" :download="downloadLinks" />
+      </div>
+      <div v-if="type === 'tv'">
+        <Detailtv :detail="detail" />
+      </div>
     </div>
   </v-container>
 </template>
@@ -111,24 +90,36 @@ import { useMovies } from "/composables/useMovies"
 const { getDetail, loading } = useMovies()
 
 const route = useRoute()
+const router = useRouter()
 const id = ref(route.params.id)
 const detail = ref([])
+const type = ref("")
 const streamingLinkActive = ref([])
 const downloadLinks = ref([])
 
 const fetchDetail = async () => {
   try {
     const res = await getDetail(id.value)
-    detail.value = res.data
-    streamingLinkActive.value = res.data.streaming_links[1]
-    downloadLinks.value = res.data.download_links
-    console.log(detail.value)
+
+    if (id.value.length > 2) {
+      type.value = "tv"
+      detail.value = res.data
+      streamingLinkActive.value = res.data.trailer
+    } else {
+      type.value = "movie"
+      detail.value = res.data
+      streamingLinkActive.value = res.data.streaming_links[1]
+      downloadLinks.value = res.data.download_links
+    }
   } catch (error) {
     console.log(error)
   }
 }
-const changeStremLink = (link) => {
+const changeStreamLink = (link) => {
   streamingLinkActive.value = link
+}
+const chooseEps = (eps) => {
+  router.push(`/series${eps}`)
 }
 
 onMounted(async () => {

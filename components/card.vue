@@ -47,7 +47,6 @@ const colors = ref("")
 const router = useRouter()
 
 const detail = (id) => {
-  console.log(id)
   router.push(`/detail${id}`)
 }
 
