@@ -7,7 +7,7 @@
     v-for="movie in movies"
   >
     <div class="relative">
-      <v-img :src="movie.thumbnail_url"></v-img>
+      <v-img :src="movie.thumbnail_url" alt="thumbnail"></v-img>
 
       <p class="absolute-quality">{{ movie.quality }}</p>
       <p class="absolute-duration" v-if="movie.duration != ''">
@@ -20,9 +20,8 @@
         <Genre :genre="movie.genre" />
       </div>
       <div class="d-flex absolute-btn">
-        <v-btn @click="detail(movie.movieId)" size="small"
-          ><v-icon icon="mdi-movie" color=""></v-icon
-        ></v-btn>
+        <Modaltrailer :movie="movie" />
+       
         <v-btn color="#ff0000" @click="detail(movie.movieId)" size="small"
           >tonton</v-btn
         >

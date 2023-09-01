@@ -1,6 +1,6 @@
 <template>
   <Head>
-    <Title>{{ series.title }}</Title>
+    <Title>{{ series.title || "Wait" }}</Title>
     <Meta name="description" content="Series terbaik" />
   </Head>
   <v-container>

@@ -1,6 +1,6 @@
 <template>
   <Head>
-    <Title>{{ detail.title }}</Title>
+    <Title>{{ detail.title || "Wait" }}</Title>
     <Meta name="description" content="nonton film gratis" />
   </Head>
 
