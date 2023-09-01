@@ -78,7 +78,9 @@ useHead({
     {
       async: true,
       src: "https://analytics.umami.is/script.js",
-      data: "c6c6a847-d049-408c-8040-1b6fc083fdaf",
+      data: {
+        website_id: "c6c6a847-d049-408c-8040-1b6fc083fdaf",
+      },
     },
   ],
 })
