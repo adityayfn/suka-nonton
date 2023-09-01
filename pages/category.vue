@@ -25,7 +25,9 @@
         <Loading />
       </div>
       <div class="d-flex flex-wrap mt-5" v-else>
-        <Card :movies="movies" />
+        <keep-alive>
+          <Card :movies="movies" />
+        </keep-alive>
       </div>
     </div>
     <v-pagination

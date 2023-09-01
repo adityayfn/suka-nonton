@@ -16,7 +16,9 @@
     <div v-else-if="query && searchResults.length > 0" class="mt-5">
       <h2>Hasil pencarian '{{ query }}'</h2>
       <div class="d-flex flex-wrap mt-5">
-        <Card :movies="searchResults" />
+        <keep-alive>
+          <Card :movies="searchResults" />
+        </keep-alive>
       </div>
       <v-pagination
         v-if="totalPages > 1"

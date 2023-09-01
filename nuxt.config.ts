@@ -11,6 +11,7 @@ export default defineNuxtConfig({
       routes: ["/category", "/explore"],
     },
   },
+
   runtimeConfig: {
     public: {
       baseUrl: "http://localhost:3000",
