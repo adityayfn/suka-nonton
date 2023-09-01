@@ -1,14 +1,4 @@
 <template>
-  <Head>
-    <Title>Suka Nonton : Nonton film tanpa iklan</Title>
-    <Meta name="description" content="nonton film tanpa iklan" />
-    <script
-      async
-      src="https://analytics.umami.is/script.js"
-      data-website-id="c6c6a847-d049-408c-8040-1b6fc083fdaf"
-    ></script>
-  </Head>
-
   <v-layout class="rounded rounded-md">
     <v-app-bar class="" color="">
       <v-card
@@ -71,6 +61,19 @@
   </v-layout>
 </template>
 <script setup>
+useHead({
+  title: "Suka Nonton : Nonton film tanpa iklan",
+  description: "nonton film tanpa iklan",
+  script: [
+    {
+      async: true,
+      src: "https://analytics.umami.is/script.js",
+      data: {
+        website_id: "c6c6a847-d049-408c-8040-1b6fc083fdaf",
+      },
+    },
+  ],
+})
 const drawer = ref(false)
 
 const items = ref([
