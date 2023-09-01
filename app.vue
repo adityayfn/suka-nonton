@@ -68,11 +68,6 @@
     <v-main class="" style="">
       <NuxtPage :movies="movies" />
     </v-main>
-    <v-footer app class="py-2"
-      ><p class="my-0 mx-auto">
-        © 2023 Suka Nonton. All Rights Reserved.
-      </p></v-footer
-    >
   </v-layout>
 </template>
 <script setup>
