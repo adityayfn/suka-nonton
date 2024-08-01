@@ -2,13 +2,10 @@
   <v-container>
     <div>
       <v-text-field v-model="query" label="Search Movies"></v-text-field>
-      <small v-if="query !== ''"
-        >*Tekan tombol reset jika ingin mencari film lain</small
-      >
     </div>
     <v-btn type="submit" color="#ff0000" class="mr-2" @click="searchMovies"
       >Search</v-btn
-    ><v-btn type="submit" color="warning" @click="reset">Reset</v-btn>
+    >
 
     <div v-if="loading">
       <Loading />
@@ -35,8 +32,6 @@
   </v-container>
 </template>
 <script setup>
-const { getBySearch } = useMovies()
-
 const query = ref("")
 const currentPage = ref(1)
 const searchResults = ref([])
@@ -46,25 +41,29 @@ const showNoResults = ref(false)
 
 const searchMovies = async () => {
   try {
-    loading.value = true
-    const res = await getBySearch(query.value, currentPage.value)
-    searchResults.value = res.data.movies
-    totalPages.value = res.data.lastPage
-    loading.value = false
+    const datas = await $fetch(
+      `/api/movies?q=${query.value}&page=${currentPage.value}`
+    )
+
+    searchResults.value = datas.movies
+    totalPages.value = datas.lastPage
     window.scrollTo({ top: 0, behavior: "smooth" })
-    showNoResults.value = res.data.movies.length === 0 && query.value !== ""
-    console.log(showNoResults.value)
   } catch (error) {
     console.log(error)
   }
 }
+
 const reset = () => {
   query.value = ""
   searchResults.value = []
   showNoResults.value = false
 }
-// watch(query, async () => {
-//   await searchMovies()
-// })
+
+watch(currentPage, () => {
+  searchMovies()
+})
+watch(query, () => {
+  if (query.value == "") reset()
+})
 </script>
 <style></style>

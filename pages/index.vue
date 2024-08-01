@@ -10,6 +10,7 @@
     <div v-if="loading">
       <Loading />
     </div>
+
     <div class="d-flex flex-wrap mt-5" v-else>
       <keep-alive>
         <Card :movies="movies" />
@@ -27,28 +28,32 @@
   </v-container>
 </template>
 <script setup>
-const { loading, getAll } = useMovies()
-
 const movies = ref([])
 const currentPage = ref(1)
 const totalPages = ref(0)
+const loading = ref(true)
 
-const fetchMovies = async () => {
+const getAllMovies = async () => {
   try {
-    const res = await getAll(currentPage.value)
-    movies.value = res.data.movies
-    totalPages.value = res.data.lastPage
+    const datas = await $fetch(`/api/movies?page=${currentPage.value}`)
+
+    movies.value = datas.movies
+    totalPages.value = datas.lastPage
+
     window.scrollTo({ top: 0, behavior: "smooth" })
   } catch (error) {
     console.log(error)
   }
 }
 
-onMounted(async () => {
-  await fetchMovies()
+onMounted(() => {
+  getAllMovies()
+  setTimeout(() => {
+    loading.value = false
+  }, 1000)
 })
 watch(currentPage, () => {
-  fetchMovies()
+  getAllMovies()
 })
 </script>
 <style></style>

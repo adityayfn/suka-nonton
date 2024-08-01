@@ -1,0 +1,119 @@
+import { siteConfig } from "~/utils/siteConfig"
+import * as cheerio from "cheerio"
+import axios from "axios"
+import { removeSeparator } from "~/utils/helper"
+
+export default defineEventHandler(async (event) => {
+  const baseUrl = siteConfig.scrapUrl
+
+  const params = event.context.params.movie.split("/")
+
+  let url = baseUrl
+
+  if (params.length < 2) {
+    url = `${baseUrl}/${params[0]}`
+  } else {
+    url = `${baseUrl}/${params[0]}/${params[1]}`
+  }
+
+  const downloadLinks = []
+  const movieDetail = []
+  const tvDetail = []
+  const dataMovie = {}
+
+  try {
+    const res = await axios.get(url)
+
+    const $ = cheerio.load(res.data)
+
+    const streamLinks = []
+
+    const numOfStreamLinks = $("ul.muvipro-player-tabs li a")
+      .text()
+      .split(" ")
+      .at(-1)
+
+    if (numOfStreamLinks) {
+      for (let i = 1; i <= parseInt(numOfStreamLinks); i++) {
+        streamLinks.push(`${url}/?player=${i}`)
+      }
+    }
+
+    const streamingLinks = await getStreamingLinks(streamLinks)
+
+    const eps_links_tv = []
+    $(".gmr-listseries a").each((i, el) => {
+      if (i !== 0) {
+        let link = $(el).attr("href")
+
+        eps_links_tv.push({
+          title: $(el).text(),
+          tvId: link?.replace(siteConfig.scrapUrl, ""),
+        })
+      }
+    })
+
+    $("#main").each((index, element) => {
+      $(element)
+        .find(".gmr-moviedata")
+        .each((i, ec) => {
+          // ec = element child
+          const textLine = removeSeparator($(ec).text())[0]
+            .toLowerCase()
+            .replace(" ", "_")
+          const textValue = removeSeparator($(ec).text())[1].toLowerCase()
+
+          dataMovie[textLine] = textValue
+        })
+
+      if (params[0] !== "tv") {
+        movieDetail.push({
+          title: $(element).find("h1.entry-title").text(),
+          description: $(element).find("div.entry-content p").text(),
+          create_at: dataMovie.posted_on ?? "-",
+          tagline: dataMovie.tagline ?? "-",
+          rating: dataMovie.rate ?? "-",
+          genre: dataMovie.genre ?? "-",
+          duration: dataMovie.duration,
+          release_date: dataMovie.year ?? "-",
+          language: dataMovie.language ?? "-",
+          director: dataMovie.by ?? "-",
+          streamingLinks,
+        })
+      } else {
+        tvDetail.push({
+          title: $(element).find("h1.entry-title").text(),
+          trailer: $(element).find(".gmr-embed-responsive iframe").attr("src"),
+          description: $(element).find("div.entry-content p").text(),
+          create_at: dataMovie.posted_on ?? "",
+          director: dataMovie.by,
+          genre: dataMovie.genre ?? "",
+          release_date: dataMovie.release ?? "",
+          number_of_eps: dataMovie.number_of_episode,
+          eps_links: eps_links_tv,
+        })
+      }
+    })
+    const data = params[0] !== "tv" ? movieDetail : tvDetail
+    return data
+  } catch (error) {
+    return error
+  }
+})
+
+export async function getStreamingLinks(streamLinks) {
+  const streamingLinks = []
+
+  for (let i = 0; i < streamLinks.length; i++) {
+    const rawRes = await fetch(streamLinks[i])
+
+    const html = await rawRes.text()
+
+    const $ = cheerio.load(html)
+
+    const streamLink = $(".gmr-embed-responsive > iframe").attr("src")
+
+    streamingLinks.push(streamLink)
+  }
+  return streamingLinks
+}

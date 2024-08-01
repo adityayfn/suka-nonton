@@ -56,7 +56,7 @@
     </v-navigation-drawer>
 
     <v-main class="" style="">
-      <NuxtPage :movies="movies" />
+      <NuxtPage />
     </v-main>
   </v-layout>
 </template>

@@ -55,7 +55,11 @@
 
             <div v-for="(link, index) in detail.eps_links">
               <v-btn
-                @click="chooseEps(link.tvId)"
+                @click="
+                  chooseEps(
+                    `${link.tvId.replace(/\/$/, '')}?player=${index + 1}`
+                  )
+                "
                 color="#ff0000"
                 class="mr-1 my-1"
                 >{{ link.title }}</v-btn
@@ -82,7 +86,7 @@
       </v-card>
 
       <div v-if="type === 'movie'">
-        <Detailmovies :detail="detail" :download="downloadLinks" />
+        <Detailmovies :detail="detail" />
       </div>
       <div v-if="type === 'tv'">
         <Detailtv :detail="detail" />
@@ -91,35 +95,31 @@
   </v-container>
 </template>
 <script setup>
-import { useMovies } from "/composables/useMovies"
-const { getDetail, loading } = useMovies()
-
 const route = useRoute()
 const router = useRouter()
 const id = ref(route.params.id)
 const detail = ref([])
 const type = ref("")
 const streamingLinkActive = ref([])
-const downloadLinks = ref([])
+const loading = ref(true)
 
 const fetchDetail = async () => {
-  try {
-    const res = await getDetail(id.value)
+  if (id.value.length > 2) {
+    const datas = await $fetch(
+      `/api/movies/detail/${id.value[0]}/${id.value[1]}`
+    )
 
-    if (id.value.length > 2) {
-      type.value = "tv"
-      detail.value = res.data
-      streamingLinkActive.value = res.data.trailer
-    } else {
-      type.value = "movie"
-      detail.value = res.data
-      streamingLinkActive.value = res.data.streaming_links[1]
-      downloadLinks.value = res.data.download_links
-    }
-  } catch (error) {
-    console.log(error)
+    type.value = "tv"
+    detail.value = datas[0]
+    streamingLinkActive.value = detail.value.trailer
+  } else {
+    const datas = await $fetch(`/api/movies/detail/${id.value[0]}`)
+    type.value = "movie"
+    detail.value = datas[0]
+    streamingLinkActive.value = detail.value.streamingLinks[0]
   }
 }
+
 const changeStreamLink = (link) => {
   streamingLinkActive.value = link
 }
@@ -128,7 +128,10 @@ const chooseEps = (eps) => {
 }
 
 onMounted(async () => {
-  await fetchDetail()
+  fetchDetail()
+  setTimeout(() => {
+    loading.value = false
+  }, 1200)
 })
 </script>
 <style>

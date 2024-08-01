@@ -6,23 +6,18 @@
     <div class="mx-5 my-3">
       <div class=" ">
         <h3 class="capitalize my-2">
-          tanggal rilis: <span class="def">{{ props.detail.realease }}</span>
+          tanggal rilis:
+          <span class="def">{{ props.detail.release_date }}</span>
         </h3>
         <h3 class="capitalize my-2">
           jumlah episode:
-          <span class="def">{{ props.detail.number_of_eps }}</span>
+          <span class="def">{{ props.detail.eps_links.length }}</span>
         </h3>
         <h3 class="capitalize my-2">
           genre: <span class="def">{{ props.detail.genre }}</span>
         </h3>
         <h3 class="capitalize my-2">
-          negara: <span class="def">{{ props.detail.country }}</span>
-        </h3>
-        <h3 class="capitalize my-2">
-          durasi: <span class="def">{{ props.detail.duration }}</span>
-        </h3>
-        <h3 class="capitalize">
-          pemain: <span class="def">{{ props.detail.artist }}</span>
+          sutradara: <span class="def">{{ props.detail.director }}</span>
         </h3>
       </div>
     </div>

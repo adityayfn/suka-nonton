@@ -2,7 +2,7 @@
   <v-card
     width="150"
     max-width="340"
-    height="450"
+    height="350"
     class="mb-5 mx-auto"
     v-for="movie in movies"
   >
@@ -17,11 +17,10 @@
     <v-card-item class="">
       <div class="d-flex flex-column item relative">
         <h5 class="text-body-2">{{ movie.title }}</h5>
-        <Genre :genre="movie.genre" />
       </div>
       <div class="d-flex absolute-btn">
         <Modaltrailer :movie="movie" />
-       
+
         <v-btn color="#ff0000" @click="detail(movie.movieId)" size="small"
           >tonton</v-btn
         >

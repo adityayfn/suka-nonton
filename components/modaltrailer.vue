@@ -11,7 +11,7 @@
 
         <div class="">
           <iframe
-            :src="trailer"
+            :src="props.movie.trailer.replace(`watch?v=`, `embed/`)"
             frameborder="0"
             allowfullscreen
             :class="
@@ -33,7 +33,7 @@
 </template>
 <script setup>
 const props = defineProps(["movie"])
-const trailer = props.movie.trailer.replace("watch?v=", "embed/")
+// const trailer = props.movie.trailer.replace("watch?v=", "embed/")
 </script>
 <style>
 .frame-smup {

@@ -13,14 +13,14 @@
           class="ma-2"
           :color="activeGenre === genre.slug ? 'red' : 'white'"
           text-color="white"
-          @click="getData(genre.slug)"
+          @click="getDataByGenre(genre.slug)"
         >
           {{ genre.name }}
         </v-chip>
       </div>
     </div>
 
-    <div v-if="movies.length > 0">
+    <div>
       <div v-if="loading">
         <Loading />
       </div>
@@ -41,40 +41,52 @@
   </v-container>
 </template>
 <script setup>
-const { getCategory, getByCategory, loading } = useMovies()
-
 const genres = ref([])
 const movies = ref([])
 const currentPage = ref(1)
 const totalPages = ref(0)
-const activeGenre = ref(null)
-const fetchCategory = async () => {
+const activeGenre = ref("action")
+const loading = ref(true)
+
+const getCategory = async () => {
   try {
-    const res = await getCategory()
-    genres.value = res
+    const category = await $fetch("/api/genres")
+    genres.value = category
   } catch (error) {
     console.log(error)
   }
 }
-onMounted(async () => {
-  await fetchCategory()
-})
 
-const getData = async (genre) => {
+const getDataByGenre = async (genre) => {
   activeGenre.value = genre
-
   try {
-    const res = await getByCategory(currentPage.value, genre)
-    movies.value = res.data.movies
-    totalPages.value = res.data.lastPage
+    const datas = await $fetch(
+      `/api/movies?category=${genre}&page=${currentPage.value}`
+    )
+
+    movies.value = datas.movies
+    totalPages.value = datas.lastPage
+
     window.scrollTo({ top: 0, behavior: "smooth" })
   } catch (error) {
     console.log(error)
   }
 }
 
+onMounted(() => {
+  getCategory()
+  getDataByGenre("action")
+  setTimeout(() => {
+    loading.value = false
+  }, 500)
+})
+
 watch(currentPage, () => {
-  getData(activeGenre.value)
+  getDataByGenre(activeGenre.value)
+})
+
+watch(activeGenre, () => {
+  currentPage.value = 1
 })
 </script>
 <style></style>

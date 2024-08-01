@@ -15,5 +15,8 @@
     "nuxt": "^3.7.0",
     "sass": "^1.66.0",
     "vuetify": "3.3.13"
+  },
+  "dependencies": {
+    "cheerio": "1.0.0-rc.12"
   }
 }
