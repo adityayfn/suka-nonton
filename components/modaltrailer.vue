@@ -33,7 +33,6 @@
 </template>
 <script setup>
 const props = defineProps(["movie"])
-// const trailer = props.movie.trailer.replace("watch?v=", "embed/")
 </script>
 <style>
 .frame-smup {

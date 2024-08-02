@@ -5,12 +5,6 @@
   >
     <div class="mx-5 my-3">
       <div class=" ">
-        <!-- <h3 class="capitalize my-2">
-          tanggal rilis:
-          <span class="def">{{
-            props.detail.create_at.split(",").join(", ")
-          }}</span>
-        </h3> -->
         <h3 class="capitalize my-2">
           tagline:
           <span class="def">{{
