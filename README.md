@@ -8,8 +8,8 @@ In this project am using scraping method.
 Install Suka Nonton with pnpm
 
 ```bash
-  git clone https://sukanonton.vercel.app/
-  cd sukanonton
+  git clone https://github.com/adityayfn/suka-nonton.git
+  cd suka-nonton
   pnpm install
 ```
 
