@@ -1,6 +1,6 @@
 <template>
   <Head>
-    <Title>{{ series.title || "Wait" }}</Title>
+    <Title>{{ series?.title || "Wait" }}</Title>
     <Meta name="description" content="Series terbaik" />
   </Head>
   <v-container>
@@ -14,10 +14,10 @@
           $vuetify.display.sm ? '700' : $vuetify.display.mdAndUp ? '900' : ''
         "
       >
-        <h1 class="mx-5 my-3">{{ series.title }}</h1>
+        <h1 class="mx-5 my-3">{{ series?.title }}</h1>
         <div class="my-8 d-flex justify-center">
           <iframe
-            :src="series.streaming_links"
+            :src="streamingLink"
             frameborder="1"
             allowfullscreen
             referrerpolicy="no-referrer"
@@ -48,7 +48,7 @@
         <div class="d-flex flex-wrap align-center mx-3 my-2">
           <h3 class="mx-3 py-3">Pilih Episode</h3>
 
-          <div v-for="(link, index) in series.eps">
+          <div v-for="(link, index) in series?.eps">
             <v-btn
               @click="
                 chooseEps(`${link.tvId.replace(/\/$/, '')}?player=${index + 1}`)
@@ -63,12 +63,16 @@
     </div>
   </v-container>
 </template>
-<script setup>
+<script setup lang="ts">
+import { SeriesType } from "../../types/"
+
 const route = useRoute()
 const router = useRouter()
-const series = ref([])
+const series = ref<SeriesType>()
+const loading = ref<boolean>(true)
+const streamingLink = ref<string>("")
 
-const chooseEps = (eps) => {
+const chooseEps = (eps: string) => {
   router.push(`/series${eps}`)
 }
 
@@ -78,9 +82,12 @@ const fetchSeries = async () => {
   const query = route.query.player
 
   try {
-    const datas = await $fetch(`/api/tv/${params0}/${params1}?player=${query}`)
+    const res: SeriesType = await $fetch(
+      `/api/tv/${params0}/${params1}?player=${query}`
+    )
 
-    series.value = datas
+    series.value = res
+    streamingLink.value = res.streaming_links as string
   } catch (error) {
     console.log(error)
   }
@@ -88,6 +95,9 @@ const fetchSeries = async () => {
 
 onMounted(() => {
   fetchSeries()
+  setTimeout(() => {
+    loading.value = false
+  }, 1300)
 })
 </script>
 <style></style>

@@ -9,10 +9,10 @@
           tanggal rilis:
           <span class="def">{{ props.detail.release_date }}</span>
         </h3>
-        <h3 class="capitalize my-2">
+        <!-- <h3 class="capitalize my-2">
           jumlah episode:
-          <span class="def">{{ props.detail.eps_links.length }}</span>
-        </h3>
+          <span class="def">{{ props.detail.eps_links?.length }}</span>
+        </h3> -->
         <h3 class="capitalize my-2">
           genre: <span class="def">{{ props.detail.genre }}</span>
         </h3>
@@ -23,7 +23,10 @@
     </div>
   </v-card>
 </template>
-<script setup>
-const props = defineProps(["detail"])
+<script setup lang="ts">
+import { TvDetailType, MovieDetailType } from "../types/"
+const props = defineProps<{
+  detail: TvDetailType | MovieDetailType
+}>()
 </script>
 <style></style>

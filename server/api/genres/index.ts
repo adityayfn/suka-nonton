@@ -1,8 +1,9 @@
 import axios from "axios"
 import * as cheerio from "cheerio"
+import { GenresType } from "~/types"
 import { siteConfig } from "~/utils/siteConfig"
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async () => {
   const baseUrl = siteConfig.scrapUrl
 
   const res = await axios.get(baseUrl)
@@ -10,7 +11,7 @@ export default defineEventHandler(async (event) => {
   try {
     const $ = cheerio.load(html)
 
-    const genres = []
+    const genres: GenresType[] = []
 
     $(".sub-menu > .menu-item-object-category > a > span").each((i, e) => {
       genres.push({

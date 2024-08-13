@@ -1,11 +1,12 @@
 import axios from "axios"
 import * as cheerio from "cheerio"
+import { MoviesType } from "~/types"
 import { siteConfig } from "~/utils/siteConfig"
 
 export default defineEventHandler(async (event) => {
   const baseUrl = siteConfig.scrapUrl
 
-  const newUrl = new URL(event.req.url, baseUrl)
+  const newUrl = new URL(event.req.url ?? "unknown url", baseUrl)
 
   const page = Number(newUrl.searchParams.get("page")) || 1
   const category = newUrl.searchParams.get("category")
@@ -21,7 +22,7 @@ export default defineEventHandler(async (event) => {
     scrapUrl = `${baseUrl}/category/${category}/page${page}`
   }
 
-  const movies = []
+  const movies: MoviesType[] = []
 
   try {
     const res = await axios.get(scrapUrl)
@@ -38,18 +39,22 @@ export default defineEventHandler(async (event) => {
       lastPage = Number($(element).find("a.page-numbers").last().text())
     })
 
-    movieEl.each((index, element) => {
+    movieEl.each((index: number, element: any) => {
       movies.push({
         title: $(element).find(".entry-title > a").text(),
-        movieId: $(element)
-          .find(".entry-title > a")
-          .attr("href")
-          .replace(baseUrl, ""),
-        thumbnail_url: $(element).find(".attachment-medium").attr("src"),
+        movieId:
+          $(element)
+            .find(".entry-title > a")
+            .attr("href")
+            ?.replace(baseUrl, "") ?? "movieId not found",
+        thumbnail_url:
+          $(element).find(".attachment-medium").attr("src") ??
+          "thumbnail_url doesn't exist",
         rating: $(element).find(".gmr-rating-item").text().trim(),
-        trailer: $(element)
-          .find(".gmr-popup-button > a.gmr-trailer-popup")
-          .attr("href"),
+        trailer:
+          $(element)
+            .find(".gmr-popup-button > a.gmr-trailer-popup")
+            .attr("href") ?? "trailer not found",
       })
     })
     return { movies, page, lastPage }

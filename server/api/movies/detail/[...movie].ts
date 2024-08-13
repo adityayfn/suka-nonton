@@ -2,31 +2,31 @@ import { siteConfig } from "~/utils/siteConfig"
 import * as cheerio from "cheerio"
 import axios from "axios"
 import { removeSeparator } from "~/utils/helper"
+import { epsLinksType, MovieDetailType, TvDetailType } from "~/types"
 
 export default defineEventHandler(async (event) => {
   const baseUrl = siteConfig.scrapUrl
 
-  const params = event.context.params.movie.split("/")
+  const params = event.context.params?.movie.split("/")
 
   let url = baseUrl
 
-  if (params.length < 2) {
-    url = `${baseUrl}/${params[0]}`
+  if (params!.length < 2) {
+    url = `${baseUrl}/${params![0]}`
   } else {
-    url = `${baseUrl}/${params[0]}/${params[1]}`
+    url = `${baseUrl}/${params![0]}/${params![1]}`
   }
 
-  const downloadLinks = []
-  const movieDetail = []
-  const tvDetail = []
-  const dataMovie = {}
+  const movieDetail: MovieDetailType[] = []
+  const tvDetail: TvDetailType[] = []
+  const dataMovie: { [key: string]: string } = {}
 
   try {
     const res = await axios.get(url)
 
     const $ = cheerio.load(res.data)
 
-    const streamLinks = []
+    const streamLinks: string[] = []
 
     const numOfStreamLinks = $("ul.muvipro-player-tabs li a")
       .text()
@@ -40,20 +40,23 @@ export default defineEventHandler(async (event) => {
     }
 
     const streamingLinks = await getStreamingLinks(streamLinks)
+    const streamingLinksFiltered = streamingLinks.filter(
+      (link): link is string => link !== undefined
+    )
 
-    const eps_links_tv = []
+    const eps_links_tv: epsLinksType[] = []
     $(".gmr-listseries a").each((i, el) => {
       if (i !== 0) {
         let link = $(el).attr("href")
 
         eps_links_tv.push({
           title: $(el).text(),
-          tvId: link?.replace(siteConfig.scrapUrl, ""),
+          tvId: link?.replace(siteConfig.scrapUrl, "") ?? "tvId not found",
         })
       }
     })
 
-    $("#main").each((index, element) => {
+    $("#main").each((index: number, element: any) => {
       $(element)
         .find(".gmr-moviedata")
         .each((i, ec) => {
@@ -66,7 +69,7 @@ export default defineEventHandler(async (event) => {
           dataMovie[textLine] = textValue
         })
 
-      if (params[0] !== "tv") {
+      if (params![0] !== "tv") {
         movieDetail.push({
           title: $(element).find("h1.entry-title").text(),
           description: $(element).find("div.entry-content p").text(),
@@ -78,12 +81,14 @@ export default defineEventHandler(async (event) => {
           release_date: dataMovie.year ?? "-",
           language: dataMovie.language ?? "-",
           director: dataMovie.by ?? "-",
-          streamingLinks,
+          streamingLinks: streamingLinksFiltered,
         })
       } else {
         tvDetail.push({
           title: $(element).find("h1.entry-title").text(),
-          trailer: $(element).find(".gmr-embed-responsive iframe").attr("src"),
+          trailer:
+            $(element).find(".gmr-embed-responsive iframe").attr("src") ??
+            "trailer not found",
           description: $(element).find("div.entry-content p").text(),
           create_at: dataMovie.posted_on ?? "",
           director: dataMovie.by,
@@ -94,14 +99,17 @@ export default defineEventHandler(async (event) => {
         })
       }
     })
-    const data = params[0] !== "tv" ? movieDetail : tvDetail
+    const data = params![0] !== "tv" ? movieDetail : tvDetail
+
     return data
   } catch (error) {
     return error
   }
 })
 
-export async function getStreamingLinks(streamLinks) {
+export async function getStreamingLinks(
+  streamLinks: string[]
+): Promise<(string | undefined)[]> {
   const streamingLinks = []
 
   for (let i = 0; i < streamLinks.length; i++) {
@@ -115,5 +123,6 @@ export async function getStreamingLinks(streamLinks) {
 
     streamingLinks.push(streamLink)
   }
+
   return streamingLinks
 }

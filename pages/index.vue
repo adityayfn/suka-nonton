@@ -27,18 +27,26 @@
     ></v-pagination>
   </v-container>
 </template>
-<script setup>
-const movies = ref([])
-const currentPage = ref(1)
-const totalPages = ref(0)
-const loading = ref(true)
+<script setup lang="ts">
+import { MoviesType, MoviesResType } from "../types/"
+
+const movies = ref<MoviesType[]>([])
+const currentPage = ref<number>(1)
+const totalPages = ref<number>(0)
+const loading = ref<boolean>(true)
 
 const getAllMovies = async () => {
   try {
-    const datas = await $fetch(`/api/movies?page=${currentPage.value}`)
+    const res: MoviesResType = await $fetch(
+      `/api/movies?page=${currentPage.value}`
+    )
 
-    movies.value = datas.movies
-    totalPages.value = datas.lastPage
+    if (!res) {
+      return "Movies not Found"
+    }
+
+    movies.value = res.movies
+    totalPages.value = res.lastPage
 
     window.scrollTo({ top: 0, behavior: "smooth" })
   } catch (error) {

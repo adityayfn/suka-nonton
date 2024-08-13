@@ -23,7 +23,10 @@
     </div>
   </v-card>
 </template>
-<script setup>
-const props = defineProps(["detail", "download"])
+<script setup lang="ts">
+import { MovieDetailType, TvDetailType } from "../types/"
+const props = defineProps<{
+  detail: MovieDetailType | TvDetailType
+}>()
 </script>
 <style></style>

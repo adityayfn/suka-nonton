@@ -18,9 +18,9 @@
         </keep-alive>
       </div>
       <v-pagination
-        v-if="totalPages > 1"
+        v-if="totalPages! > 1"
         v-model="currentPage"
-        :length="totalPages"
+        :length="totalPages ?? 0"
         :total-visible="$vuetify.display.xs ? 4 : $vuetify.display.sm ? 8 : 10"
         prev-icon="mdi-chevron-left"
         next-icon="mdi-chevron-right"
@@ -31,22 +31,28 @@
     </div>
   </v-container>
 </template>
-<script setup>
-const query = ref("")
-const currentPage = ref(1)
-const searchResults = ref([])
-const totalPages = ref(null)
-const loading = ref(false)
-const showNoResults = ref(false)
+<script setup lang="ts">
+import { MoviesType, MoviesResType } from "../types/"
+
+const query = ref<string>("")
+const currentPage = ref<number>(1)
+const searchResults = ref<MoviesType[]>([])
+const totalPages = ref<number | null>(null)
+const loading = ref<boolean>(false)
+const showNoResults = ref<boolean>(false)
 
 const searchMovies = async () => {
   try {
-    const datas = await $fetch(
+    const res: MoviesResType = await $fetch(
       `/api/movies?q=${query.value}&page=${currentPage.value}`
     )
 
-    searchResults.value = datas.movies
-    totalPages.value = datas.lastPage
+    if (!res) {
+      return "Movies not found"
+    }
+
+    searchResults.value = res.movies
+    totalPages.value = res.lastPage
     window.scrollTo({ top: 0, behavior: "smooth" })
   } catch (error) {
     console.log(error)

@@ -1,6 +1,6 @@
 <template>
   <Head>
-    <Title>{{ detail.title || "Wait" }}</Title>
+    <Title>{{ detail[0]?.title || "Wait" }}</Title>
     <Meta name="description" content="nonton film gratis" />
   </Head>
 
@@ -39,21 +39,10 @@
           ></iframe>
         </div>
         <div class="d-flex flex-wrap mx-5 my-6">
-          <div
-            v-for="(link, index) in detail.streaming_links"
-            v-if="type === 'movie'"
-          >
-            <v-btn
-              @click="changeStreamLink(link)"
-              color="#ff0000"
-              class="mr-1 my-1"
-              >server{{ index + 1 }}</v-btn
-            >
-          </div>
           <div v-if="type === 'tv'" class="d-flex flex-wrap align-center">
             <h3 class="mr-3">Pilih Episode</h3>
 
-            <div v-for="(link, index) in detail.eps_links">
+            <div v-for="(link, index) in detail[0].eps_links">
               <v-btn
                 @click="
                   chooseEps(
@@ -77,53 +66,61 @@
       >
         <div class="mx-5 my-3">
           <h2 class="capitalize my-2">
-            {{ detail.title }}
+            {{ detail[0]?.title }}
           </h2>
           <h4 class="capitalize def my-2">
-            {{ detail.description }}
+            {{ detail[0]?.description }}
           </h4>
         </div>
       </v-card>
 
       <div v-if="type === 'movie'">
-        <Detailmovies :detail="detail" />
+        <Detailmovies :detail="detail[0]" />
       </div>
       <div v-if="type === 'tv'">
-        <Detailtv :detail="detail" />
+        <Detailtv :detail="detail[0]" />
       </div>
     </div>
   </v-container>
 </template>
-<script setup>
+<script setup lang="ts">
+import { MovieDetailType, TvDetailType } from "../../types/"
 const route = useRoute()
 const router = useRouter()
 const id = ref(route.params.id)
-const detail = ref([])
+const detail = ref<MovieDetailType[] | TvDetailType[]>([])
 const type = ref("")
-const streamingLinkActive = ref([])
+const streamingLinkActive = ref<string>("")
 const loading = ref(true)
 
 const fetchDetail = async () => {
   if (id.value.length > 2) {
-    const datas = await $fetch(
+    const res: TvDetailType[] = await $fetch(
       `/api/movies/detail/${id.value[0]}/${id.value[1]}`
     )
+    if (!res) {
+      return "Series not found"
+    }
 
     type.value = "tv"
-    detail.value = datas[0]
-    streamingLinkActive.value = detail.value.trailer
+    detail.value = [res[0]]
+    streamingLinkActive.value = detail.value[0].trailer || ""
   } else {
-    const datas = await $fetch(`/api/movies/detail/${id.value[0]}`)
+    const res: MovieDetailType[] = await $fetch(
+      `/api/movies/detail/${id.value[0]}`
+    )
+
+    if (!res) {
+      return "Movies not found"
+    }
+
     type.value = "movie"
-    detail.value = datas[0]
-    streamingLinkActive.value = detail.value.streamingLinks[0]
+    detail.value = [res[0]]
+    streamingLinkActive.value = detail.value[0].streamingLinks[0] || ""
   }
 }
 
-const changeStreamLink = (link) => {
-  streamingLinkActive.value = link
-}
-const chooseEps = (eps) => {
+const chooseEps = (eps: string) => {
   router.push(`/series${eps}`)
 }
 
@@ -131,7 +128,7 @@ onMounted(async () => {
   fetchDetail()
   setTimeout(() => {
     loading.value = false
-  }, 1200)
+  }, 1500)
 })
 </script>
 <style>

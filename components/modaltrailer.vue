@@ -31,8 +31,11 @@
     </template>
   </v-dialog>
 </template>
-<script setup>
-const props = defineProps(["movie"])
+<script setup lang="ts">
+import { MoviesType } from "../types/"
+const props = defineProps<{
+  movie: MoviesType
+}>()
 </script>
 <style>
 .frame-smup {

@@ -40,32 +40,40 @@
     ></v-pagination>
   </v-container>
 </template>
-<script setup>
-const genres = ref([])
-const movies = ref([])
-const currentPage = ref(1)
-const totalPages = ref(0)
-const activeGenre = ref("action")
-const loading = ref(true)
+<script setup lang="ts">
+import { GenresType, MoviesResType, MoviesType } from "../types/"
+
+const genres = ref<GenresType[]>([])
+const movies = ref<MoviesType[]>([])
+const currentPage = ref<number>(1)
+const totalPages = ref<number>(0)
+const activeGenre = ref<string>("action")
+const loading = ref<boolean>(true)
 
 const getCategory = async () => {
   try {
-    const category = await $fetch("/api/genres")
-    genres.value = category
+    const res: GenresType[] = await $fetch("/api/genres")
+    if (!res) {
+      return "Genres not found"
+    }
+    genres.value = res
   } catch (error) {
     console.log(error)
   }
 }
 
-const getDataByGenre = async (genre) => {
+const getDataByGenre = async (genre: string) => {
   activeGenre.value = genre
   try {
-    const datas = await $fetch(
+    const res: MoviesResType = await $fetch(
       `/api/movies?category=${genre}&page=${currentPage.value}`
     )
+    if (!res) {
+      return "Movies not found"
+    }
 
-    movies.value = datas.movies
-    totalPages.value = datas.lastPage
+    movies.value = res.movies
+    totalPages.value = res.lastPage
 
     window.scrollTo({ top: 0, behavior: "smooth" })
   } catch (error) {

@@ -1,15 +1,15 @@
 import axios from "axios"
 import * as cheerio from "cheerio"
+import { epsLinksType } from "~/types"
 import { siteConfig } from "~/utils/siteConfig"
-import { getStreamingLinks } from "../movies/detail/[...movie]"
 
 export default defineEventHandler(async (event) => {
   const baseUrl = siteConfig.scrapUrl
-  const newUrl = new URL(event.req.url, baseUrl)
+  const newUrl = new URL(event.req.url ?? "unknown url", baseUrl)
 
   const query = newUrl.search
 
-  const params = event.context.params.eps
+  const params = event.context.params?.eps
 
   const url = `${baseUrl}/${params}/${query}`
 
@@ -20,14 +20,14 @@ export default defineEventHandler(async (event) => {
   try {
     const $ = cheerio.load(html)
 
-    const eps_links = []
+    const eps_links: epsLinksType[] = []
 
     $(".gmr-listseries a").each((i, e) => {
       if (i != 0) {
         let link = $(e).attr("href")
         eps_links.push({
           title: $(e).text(),
-          tvId: link?.replace(baseUrl, ""),
+          tvId: link?.replace(baseUrl, "") ?? "tvId not found",
         })
       }
     })
