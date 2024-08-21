@@ -32,7 +32,7 @@
   </v-container>
 </template>
 <script setup lang="ts">
-import { MoviesType, MoviesResType } from "../types/"
+import type { MoviesType, MoviesResType } from "../types/"
 
 const query = ref<string>("")
 const currentPage = ref<number>(1)

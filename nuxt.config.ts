@@ -3,9 +3,11 @@ export default defineNuxtConfig({
     "vuetify/lib/styles/main.sass",
     "@mdi/font/css/materialdesignicons.min.css",
   ],
+
   build: {
     transpile: ["vuetify", "node-fetch-native"],
   },
+
   nitro: {
     prerender: {
       routes: ["/category", "/explore"],
@@ -17,4 +19,6 @@ export default defineNuxtConfig({
       baseUrl: "http://localhost:3000",
     },
   },
+
+  compatibilityDate: "2024-08-21",
 })

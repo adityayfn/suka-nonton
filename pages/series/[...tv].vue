@@ -64,7 +64,7 @@
   </v-container>
 </template>
 <script setup lang="ts">
-import { SeriesType } from "../../types/"
+import type { SeriesType } from "../../types/"
 
 const route = useRoute()
 const router = useRouter()

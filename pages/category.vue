@@ -41,7 +41,7 @@
   </v-container>
 </template>
 <script setup lang="ts">
-import { GenresType, MoviesResType, MoviesType } from "../types/"
+import type  { GenresType, MoviesResType, MoviesType } from "../types/"
 
 const genres = ref<GenresType[]>([])
 const movies = ref<MoviesType[]>([])

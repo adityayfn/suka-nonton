@@ -28,7 +28,7 @@
   </v-container>
 </template>
 <script setup lang="ts">
-import { MoviesType, MoviesResType } from "../types/"
+import type { MoviesType, MoviesResType } from "../types/"
 
 const movies = ref<MoviesType[]>([])
 const currentPage = ref<number>(1)

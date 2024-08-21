@@ -32,7 +32,7 @@
   </v-dialog>
 </template>
 <script setup lang="ts">
-import { MoviesType } from "../types/"
+import type { MoviesType } from "../types/"
 const props = defineProps<{
   movie: MoviesType
 }>()

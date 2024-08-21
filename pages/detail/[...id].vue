@@ -84,7 +84,7 @@
   </v-container>
 </template>
 <script setup lang="ts">
-import { MovieDetailType, TvDetailType } from "../../types/"
+import type { MovieDetailType, TvDetailType } from "../../types/"
 const route = useRoute()
 const router = useRouter()
 const id = ref(route.params.id)

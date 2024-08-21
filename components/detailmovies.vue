@@ -24,7 +24,7 @@
   </v-card>
 </template>
 <script setup lang="ts">
-import { MovieDetailType, TvDetailType } from "../types/"
+import type { MovieDetailType, TvDetailType } from "../types/"
 const props = defineProps<{
   detail: MovieDetailType | TvDetailType
 }>()

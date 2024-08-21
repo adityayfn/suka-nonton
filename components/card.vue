@@ -34,7 +34,8 @@
   </v-card>
 </template>
 <script setup lang="ts">
-import { MoviesType } from "../types/"
+import type { MoviesType } from "../types/"
+import { rating, formatVoteAverage } from "../utils/helper"
 
 const props = defineProps<{
   movies: MoviesType[]

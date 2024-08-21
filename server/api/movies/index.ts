@@ -26,6 +26,7 @@ export default defineEventHandler(async (event) => {
 
   try {
     const res = await axios.get(scrapUrl)
+
     const $ = cheerio.load(res.data)
 
     const movieEl = $("article.item-infinite")
@@ -57,6 +58,7 @@ export default defineEventHandler(async (event) => {
             .attr("href") ?? "trailer not found",
       })
     })
+
     return { movies, page, lastPage }
   } catch (error) {
     return error
