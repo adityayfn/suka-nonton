@@ -1,6 +1,6 @@
 export const siteConfig = {
-  // scrapUrl: "https://new15.ngefilm21.yachts/",
-  scrapUrl: "https://www.greatlaketolaketrail.org",
+  scrapUrl: "https://www.ragihospitalkukatpally.com/",
+  // scrapUrl: "https://www.greatlaketolaketrail.org",
 }
 
 // https://www.ngefilm21.pw/

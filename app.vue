@@ -15,26 +15,6 @@ useHead({
     },
   ],
 })
-// const drawer = ref(false)
-
-// const items = ref([
-//   {
-//     title: "Home",
-//     icon: "mdi-home",
-//     route: "/",
-//   },
-//   {
-//     title: "Category",
-//     icon: "mdi-movie",
-//     route: "/category",
-//   },
-
-//   {
-//     title: "Explore",
-//     icon: "mdi-magnify",
-//     route: "/explore",
-//   },
-// ])
 </script>
 <style>
 @import url("https://fonts.googleapis.com/css2?family=Oswald:wght@200;400;700&display=swap");
