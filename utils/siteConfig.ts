@@ -1,5 +1,5 @@
 export const siteConfig = {
-  scrapUrl: "https://www.ragihospitalkukatpally.com/",
+  scrapUrl: "https://www.ragihospitalkukatpally.com",
   // scrapUrl: "https://www.greatlaketolaketrail.org",
 }
 
