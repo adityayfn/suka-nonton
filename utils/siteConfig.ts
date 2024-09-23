@@ -1,5 +1,6 @@
 export const siteConfig = {
-  scrapUrl: "https://www.eatfamoso.com",
+  scrapUrl: "https://www.matchsticksbbq.com", 
+    // "https://www.eatfamoso.com",
   // "https://www.ragihospitalkukatpally.com",
   // scrapUrl: "https://www.greatlaketolaketrail.org",
 }
