@@ -1,5 +1,6 @@
 export const siteConfig = {
-  scrapUrl: "https://bribristrong.com"
+  scrapUrl: "https://www.torontofoodfilmfest.com"
+    //"https://bribristrong.com"
     //"https://ics-hs.com", 
     // "https://www.eatfamoso.com",
   // "https://www.ragihospitalkukatpally.com",
