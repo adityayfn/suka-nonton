@@ -28,7 +28,10 @@ export default defineEventHandler(async (event) => {
         "User-Agent":
           "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/126.0 Safari/537.36",
         Accept: "text/html,application/xhtml+xml",
+        "Accept-Language": "en-US,en;q=0.9",
+        Referer: siteConfig.scrapUrl,
       },
+      timeout: 20000,
     })
 
     const $ = cheerio.load(res.data)
