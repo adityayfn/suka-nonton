@@ -10,6 +10,7 @@ export default defineEventHandler(async (event) => {
   const params = event.context.params?.movie.split("/")
 
   let url = baseUrl
+  console.log(url)
 
   if (params!.length < 2) {
     url = `${baseUrl}/${params![0]}`

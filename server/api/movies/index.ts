@@ -9,7 +9,7 @@ export default defineEventHandler(async (event) => {
   const newUrl = new URL(event.req.url ?? "unknown url", baseUrl)
 
   const page = Number(newUrl.searchParams.get("page")) || 1
-  const category = newUrl.searchParams.get("category")
+  const category = newUrl.searchParams.get("genre")
   const query = newUrl.searchParams.get("q") ?? ""
 
   let scrapUrl = baseUrl
@@ -19,20 +19,38 @@ export default defineEventHandler(async (event) => {
   }
 
   if (category) {
-    scrapUrl = `${baseUrl}/category/${category}/page${page}`
+    const params = new URLSearchParams({
+      s: "",
+      search: "advanced",
+      post_type: "",
+      index: "",
+      orderby: "",
+      genre: category,
+      movieyear: "",
+      country: "",
+      quality: "",
+    })
+    if (page >= 1) scrapUrl = `${baseUrl}/page/${page}?${params.toString()}`
+    else scrapUrl = `${baseUrl}?${params.toString()}`
   }
 
   const movies: MoviesType[] = []
 
   try {
-    const res = await axios.get(scrapUrl)
+    const res = await axios.get(scrapUrl, {
+      headers: {
+        "User-Agent":
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/126.0 Safari/537.36",
+        Accept: "text/html,application/xhtml+xml",
+      },
+    })
 
     const $ = cheerio.load(res.data)
 
     const movieEl = $("article.item-infinite")
 
     let lastPage = 0
-    const pagination = $(".inf-pagination")
+    const pagination = $(".pagination")
 
     pagination.each((index, element) => {
       $(element).find("a.next.page-numbers").remove()

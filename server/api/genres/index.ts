@@ -13,7 +13,7 @@ export default defineEventHandler(async () => {
 
     const genres: GenresType[] = []
 
-    $(".sub-menu > .menu-item-object-category > a > span").each((i, e) => {
+    $(".gmr-filter-search > form > select[name=genre] option").each((i, e) => {
       genres.push({
         name: $(e).text(),
         slug: $(e).text().toLowerCase().replace(" ", "-"),
