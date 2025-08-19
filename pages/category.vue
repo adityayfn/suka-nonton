@@ -41,7 +41,7 @@
   </v-container>
 </template>
 <script setup lang="ts">
-import type  { GenresType, MoviesResType, MoviesType } from "../types/"
+import type { GenresType, MoviesResType, MoviesType } from "../types/"
 
 const genres = ref<GenresType[]>([])
 const movies = ref<MoviesType[]>([])
@@ -56,7 +56,7 @@ const getCategory = async () => {
     if (!res) {
       return "Genres not found"
     }
-    genres.value = res
+    genres.value = res.slice(1, 33)
   } catch (error) {
     console.log(error)
   }
@@ -66,8 +66,9 @@ const getDataByGenre = async (genre: string) => {
   activeGenre.value = genre
   try {
     const res: MoviesResType = await $fetch(
-      `/api/movies?category=${genre}&page=${currentPage.value}`
+      `/api/movies?genre=${genre}&page=${currentPage.value}`
     )
+    console.log(genre)
     if (!res) {
       return "Movies not found"
     }
